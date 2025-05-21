@@ -36,17 +36,17 @@ const ProductDetailScreen = () => {
 
       <Text style={styles.title}>{product?.title}</Text>
       <Text style={styles.brand}>{product?.brand}</Text>
-      <Text style={styles.category}>Kategori: {product?.category}</Text>
+      <Text style={styles.category}>Category: {product?.category}</Text>
 
       <Text style={styles.price}>${product?.price.toFixed(2)}</Text>
-      <Text style={styles.discount}>Diskon: {product?.discountPercentage}%</Text>
+      <Text style={styles.discount}>Discount: {product?.discountPercentage}%</Text>
       <Text style={styles.stock}>{product?.availabilityStatus} ({product?.stock} pcs)</Text>
       <Text style={styles.rating}>Rating: {product?.rating} ⭐</Text>
 
-      <Text style={styles.sectionTitle}>Deskripsi</Text>
+      <Text style={styles.sectionTitle}>Description</Text>
       <Text style={styles.description}>{product?.description}</Text>
 
-      <Text style={styles.sectionTitle}>Informasi Pengiriman</Text>
+      <Text style={styles.sectionTitle}>Shiping Information</Text>
       <Text>{product?.shippingInformation}</Text>
 
       <Text style={styles.sectionTitle}>Garansi & Retur</Text>
@@ -73,7 +73,7 @@ const ProductDetailScreen = () => {
         style={styles.cartButton}
         onPress={() =>handleAddToCart()}
       >
-        <Text style={styles.cartButtonText}>{added ? '✅ Ditambahkan!' : '+ Tambah ke Keranjang'}</Text>
+        <Text style={styles.cartButtonText}>{added ? '✅ Added to cart!' : '+ Add to Cart'}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -20,7 +20,7 @@ const CartScreen = () => {
   const selectedItems = cartItems.filter(item => selectedIds.includes(item.id));
   
   if (selectedItems.length === 0) {
-    Alert.alert('Pilih produk terlebih dahulu untuk checkout.');
+    Alert.alert('Please choose product before checkout');
     return;
   }
 
@@ -33,7 +33,7 @@ const CartScreen = () => {
 
   // Reset checklist
   dispatch(clearSelected());
-  Alert.alert(`Produk berhasil di-checkout: ${productNames}`);
+  Alert.alert(` successfully checkout: ${productNames}`);
 };
 
   const renderItem = ({ item }: any) => (
@@ -71,11 +71,11 @@ const CartScreen = () => {
         data={cartItems}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
-        ListEmptyComponent={<Text>Keranjang kosong.</Text>}
+        ListEmptyComponent={<Text>Empty product </Text>}
       />
 
       <Text style={styles.selectedText}>
-        {selectedIds.length} produk dipilih untuk checkout
+        {selectedIds.length} choose product to checkout
       </Text>
 
       <View style={styles.footer}>

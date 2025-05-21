@@ -37,11 +37,11 @@ const ProductCard: React.FC<Props> = ({ product }) => {
 
         <View style={styles.buttonRow}>
           <TouchableOpacity style={styles.button} onPress={handleViewDetails}>
-            <Text style={styles.buttonText}>Lihat Detail</Text>
+            <Text style={styles.buttonText}>Detail</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.button, styles.cartButton]} onPress={handleAddToCart}>
-            <Text style={styles.buttonText}>{added ? '✅ Ditambahkan!' : 'Keranjang'}</Text>
+            <Text style={styles.buttonText}>{added ? '✅ Added to Cart!' : '+ Cart'}</Text>
           </TouchableOpacity>
         </View>
       </View>
