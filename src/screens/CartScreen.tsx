@@ -1,16 +1,49 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet ,Alert} from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store';
-import { increaseQty, decreaseQty, removeFromCart, clearCart } from '../store/cartSlice';
+import { increaseQty, decreaseQty, removeFromCart, clearSelected } from '../store/cartSlice';
 
 const CartScreen = () => {
   const cartItems = useAppSelector(state => state.cart.items);
   const dispatch = useAppDispatch();
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const toggleSelect = (id: number) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+    );
+  };
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const handleCheckout = () => {
+  const selectedItems = cartItems.filter(item => selectedIds.includes(item.id));
+  
+  if (selectedItems.length === 0) {
+    Alert.alert('Pilih produk terlebih dahulu untuk checkout.');
+    return;
+  }
+
+  const productNames = selectedItems.map(item => item.title).join(', ');
+
+  // Checkout hanya produk yang dichecklist
+  selectedItems.forEach(item => {
+    dispatch(removeFromCart(item.id));
+  });
+
+  // Reset checklist
+  dispatch(clearSelected());
+  Alert.alert(`Produk berhasil di-checkout: ${productNames}`);
+};
+
   const renderItem = ({ item }: any) => (
     <View style={styles.item}>
+      <TouchableOpacity onPress={() => toggleSelect(item.id)} style={styles.checkbox}>
+        <Text style={styles.checkboxText}>
+          {selectedIds.includes(item.id) ? '✅' : '⬜'}
+        </Text>
+      </TouchableOpacity>
+
       <View style={styles.info}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>${item.price.toFixed(2)} x {item.quantity}</Text>
@@ -41,15 +74,21 @@ const CartScreen = () => {
         ListEmptyComponent={<Text>Keranjang kosong.</Text>}
       />
 
+      <Text style={styles.selectedText}>
+        {selectedIds.length} produk dipilih untuk checkout
+      </Text>
+
       <View style={styles.footer}>
         <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
-        <TouchableOpacity style={styles.checkout} onPress={() => dispatch(clearCart())}>
+        <TouchableOpacity style={styles.checkout} onPress={() => handleCheckout()}>
           <Text style={styles.checkoutText}>Checkout</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
+
+export default CartScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
@@ -60,8 +99,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
+  checkbox: { marginRight: 10 },
+  checkboxText: { fontSize: 20 },
   info: { flex: 1 },
   title: { fontSize: 16, fontWeight: '600' },
   price: { fontSize: 14, color: '#555' },
@@ -75,6 +115,13 @@ const styles = StyleSheet.create({
   qtyText: { fontSize: 16 },
   qty: { marginHorizontal: 8 },
   remove: { fontSize: 18, marginLeft: 10 },
+  selectedText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   footer: {
     paddingVertical: 12,
     borderTopWidth: 1,
@@ -90,5 +137,3 @@ const styles = StyleSheet.create({
   },
   checkoutText: { color: '#fff', fontSize: 16, fontWeight: '600' },
 });
-
-export default CartScreen;
